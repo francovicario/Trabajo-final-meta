@@ -1,0 +1,20 @@
+---
+title: "Trabajo Final"
+author: "David Fernández y Franco Vicario"
+format: pdf
+editor: visual
+---
+
+## Quarto
+
+El presente informe se centra en el **Efecto Pigmalión**, un fenómeno psicológico socialmente significativo que refiere a la existencia de una ciclo de retroalimentación positivo de la expectativa en el ámbito educativo. Especialmente, se examina la hipótesis de que las expectativas positivas que un profesor tiene sobre el potencial del crecimiento intelectual de sus alumnos pueden influir en el aumento real de su $\mathbf{Coeficiente}$ $\mathbf{Intelectual}$ ($\mathbf{CI}$).
+
+La relevancia de este efecto tomó peso luego del influyente estudio de **Rosenthal y Jacobson (1968)**. Aunque este trabajo a sido muy $\mathbf{controversial}$. Las **replicaciones** de este estudio realizadas en los años siguientes mostraron una notable $\mathbf{inconsistencia}$, dejando tamaños de efecto muy inferiores, incluso nulos, en comparación con los hallazgos del estudio original. Estas inconsistencias motivaron la necesidad de una síntesis rigurosa para llegar a una conclusión.
+
+Ante la dispersión de los resultados, el objetivo principal de este metaanalisis, basada en los datos recopilados por **Raudenbush y Bryk (1985)** (\$\\mathbf{dat.raudenbush1985}\$), es doble. En primer lugar, se busca obtener una **estimación** cuantica global y \$\\mathbf{ponderada}\$ del \$\\mathbf{tamaño}\$ del **Efecto Pigmalión** en el \$\\mathbf{CI}\$ a partir de los 19 estudios disponibles. En segundo lugar, y de manera crucial, se busca **identificar** \$\\mathbf{y}\$ **cuantificar** los **factores** \$\\mathbf{moderadores}\$ responsables de la \$\\mathbf{variabilidad}\$ (\$\\mathbf{heterogeneidad}\$) observada en los tamaños del efecto entre los distintos estudios, para así determinar bajo qué condiciones específicas el efecto se manifiesta con mayor o menor intensidad.
+
+```{r}
+
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
