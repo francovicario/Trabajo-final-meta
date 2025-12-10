@@ -49,7 +49,7 @@ summary(m.setting_commonTau)
 
 # Forest plot por subgrupos (ajustá xlim/cex si es necesario)
 forest(m.setting_separateTau, xlab = "Diferencia de Media Estandarizada")
-       print.subgroup.name = TRUE)
+       print.subgroup.name = TRUE
 
 # B) Subgrupo por 'tester' (aware vs blind)
 m.tester_separateTau <- update(m.gen, subgroup = tester, tau.common = FALSE)
