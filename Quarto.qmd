@@ -286,7 +286,7 @@ El funnel plot muestra una asimetría clara: los estudios pequeños tienden a te
 
 El gráfico radial muestra la asimetría detectada. A diferencia de un escenario libre de sesgo, donde los estudios deberían dispersarse aleatoriamente alrededor de una línea que parte del origen, observamos un patrón sistemático.
 
-La línea de regresión roja muestra una pendiente negativa que denota una relación inversa entre la precisión y el tamaño del efecto, donde los estudios menos precisos (izquierda) presentan valores $z$ desproporcionadamente altos que disminuyen conforme aumenta la precisión. Podemos ver que esta línea no arranca del origen (0,0), sino que tiene un inicio positivo marcado (> 1.6), representando el sesgo de publicación en la prueba de Egger. La pendiente negativa y un inicio elevado confirma la presencia de "efectos de estudios pequeños" (small-study effects), indicando una tendencia donde investigaciones de menor tamaño inflan la magnitud global,lo que justifica el uso de métodos correctivos como el *Trim-and-Fill*. 
+La línea de regresión roja muestra una pendiente negativa que denota una relación inversa entre la precisión y el tamaño del efecto, donde los estudios menos precisos (izquierda) presentan valores $z$ desproporcionadamente altos que disminuyen conforme aumenta la precisión. Podemos ver que esta línea no arranca del origen (0,0), sino que tiene un inicio positivo marcado (\> 1.6), representando el sesgo de publicación en la prueba de Egger. La pendiente negativa y un inicio elevado confirma la presencia de "efectos de estudios pequeños" (small-study effects), indicando una tendencia donde investigaciones de menor tamaño inflan la magnitud global,lo que justifica el uso de métodos correctivos como el *Trim-and-Fill*.
 
 ## 6.2. Pruebas Formales de Asimetría (Metabias)
 
@@ -294,20 +294,12 @@ Se aplicaron las variantes robustas de las pruebas de asimetría disponibles en 
 
 Los tres métodos de detección de asimetría del funnel plot muestran un un patrón: hay señales de posible sesgo de publicación, aunque el grado de evidencia varía según el test.
 
-**Test de Begg (rank correlation):**
-El test de Begg da un resultado marginal (z = 1.79, p = 0.074).
-Esto sugiere una indicación débil de asimetría, pero no alcanza(p< .05).
-Pero el test de Begg tiene baja potencia con k bajo (ejemplo 19 estudios), un p cercano a 0.05 puede interpretarse como una señal pero no como evidencia concluyente.
+**Test de Begg (rank correlation):** El test de Begg da un resultado marginal (z = 1.79, p = 0.074). Esto sugiere una indicación débil de asimetría, pero no alcanza(p\< .05). Pero el test de Begg tiene baja potencia con k bajo (ejemplo 19 estudios), un p cercano a 0.05 puede interpretarse como una señal pero no como evidencia concluyente.
 
-**Egger clásico (método = "linreg"):**
-El test de Egger estándar produce un resultado casi significativo (t = 2.04, p = 0.057), de nuevo en el límite.
-MOstrando una tendencia a la asimetría, coherente con lo visto en el funnel plot, pero que aún no es concluyente.
-Con muestras pequeñas, Egger también tiende a ser inestable y sensible a heterogeneidad alta. 
+**Egger clásico (método = "linreg"):** El test de Egger estándar produce un resultado casi significativo (t = 2.04, p = 0.057), de nuevo en el límite. MOstrando una tendencia a la asimetría, coherente con lo visto en el funnel plot, pero que aún no es concluyente. Con muestras pequeñas, Egger también tiende a ser inestable y sensible a heterogeneidad alta.
 
 **Egger modificado (método = "mm", Thompson & Sharp, REML):**\
-Este test es el más robusto cuando existe heterogeneidad, este si resulta estadísticamente significativo (t = 2.53, p = 0.0218).
-Dado que este método ajusta la heterogeneidad de manera más apropiada, se considera un método más confiable bajo condiciones de nuestro metaanálisis.
-La significación en este reporta asimetría del funnel plot, evidenciando de manera más sólida el sesgo de publicación.
+Este test es el más robusto cuando existe heterogeneidad, este si resulta estadísticamente significativo (t = 2.53, p = 0.0218). Dado que este método ajusta la heterogeneidad de manera más apropiada, se considera un método más confiable bajo condiciones de nuestro metaanálisis. La significación en este reporta asimetría del funnel plot, evidenciando de manera más sólida el sesgo de publicación.
 
 ## 6.4. Método Trim-and-Fill (Recortar y Rellenar)
 
@@ -329,9 +321,8 @@ Pero a pesar del ajuste la heterogeneidad sigue siendo moderada-alta (I² = 64%)
 
 En este análisis de potencia se evaluó la capacidad del metaanálisis para detectar efectos del tamaño esperado bajo distintos supuestos. Se trabajó con un total de 19 estudios, cada uno con un tamaño muestral esperado de 102 participantes, y se consideraron dos valores esperados del efecto, d = 0.1 y d = 0.2. Además se revisó cómo varía la potencia bajo un modelo de efectos fijos y un modelo de efectos aleatorios con I² = 50%.
 
-El análisis revela que, para un d = 0.1, la potencia 60% y en efectos aleatorios 36%. Esto implica que un efecto tan débil podría pasar inadvertido, especialmente en presencia de heterogeneidad entre estudios. Pero para d = 0.2, la potencia se vuelve muy alta en el modelo de efectos fijos 99% y sólida en el modelo de efectos aleatorios 87%.Estos dos resultados indican que con la evidencia disponible el metaanálisis tiene buena capacidad para detectar efectos moderados, pero no está bien preparado para identificar efectos muy chicos.  
+El análisis revela que, para un d = 0.1, la potencia es del 60% y en efectos aleatorios del 36%. Esto implica que un efecto tan débil podría pasar inadvertido, especialmente en presencia de heterogeneidad entre estudios. Pero para d = 0.2, la potencia se vuelve muy alta en el modelo de efectos fijos 99% y sólida en el modelo de efectos aleatorios 87%.Estos dos resultados indican que con la evidencia disponible el metaanálisis tiene buena capacidad para detectar efectos moderados, pero no está bien preparado para identificar efectos muy chicos.
 
-# 8. Discusión y Conclusiones
 
 # 8. Discusión y Conclusiones
 
@@ -339,7 +330,7 @@ El metaanálisis demuestra que el efecto Pigmalión sobre el Coeficiente Intelec
 
 Al profundizar en las causas de esta variabilidad, los análisis de moderadores dan resultados reveladores. Por un lado, el entorno de instrucción parece tener un rol, debido a que la enseñanza individual muestra efectos más grandes que la grupal, aunque la evidencia es limitada por los pocos estudios en esa categoría. Por otro lado, el moderador más importante resultó ser el tiempo de contacto previo (weeks), siendo la variable que explica una proporción importante de la heterogeneidad. Los datos muestran una relación inversa: cuando las expectativas se imponen al inicio del curso (con poco contacto previo), los efectos son mayores, pero si el profesor ya conoce a los alumnos desde hace semanas, la inducción de expectativas no tiene impacto. Esto sugiere conocer al alumno antes anula el efecto. Tambien se le suma la evidencia consistente de sesgo de publicación detectada en los gráficos de embudo y el test de Egger.
 
-En conclusión, los resultados sugieren que el efecto Pigmalión no es un fenómeno robusto para modificar el Coeficiente Intelectual de forma generalizada, pero si que puede aparecer bajo condiciones específicas, principalmente cuando el docente no tiene información previa del alumno. Por lo tanto, se recomienda que futuras investigaciones abandonen el uso del Coeficiente Intelectual global como variable dependiente, debido que es una medida estable, y traten de enfocarse en variables mas cambiantes como el rendimiento académico. Tambien, es importante que los nuevos estudios controlen el momento de la inducción y se realice una preregistración  para reducir el sesgo de publicación.
+En conclusión, los resultados sugieren que el efecto Pigmalión no es un fenómeno robusto para modificar el Coeficiente Intelectual de forma generalizada, pero si que puede aparecer bajo condiciones específicas, principalmente cuando el docente no tiene información previa del alumno. Por lo tanto, se recomienda que futuras investigaciones abandonen el uso del Coeficiente Intelectual global como variable dependiente, debido que es una medida estable, y traten de enfocarse en variables mas cambiantes como el rendimiento académico. Tambien, es importante que los nuevos estudios controlen el momento de la inducción y se realice una preregistración para reducir el sesgo de publicación.
 
 # Referencias Bibliográficas
 
