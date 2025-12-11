@@ -4,7 +4,7 @@ author: "David Fernández y Franco Vicario"
 format: pdf
 editor: visual
 execute:
-  enabled: false
+  warning: false
 ---
 
 ```{r setup, include=FALSE}
@@ -18,14 +18,13 @@ library(dmetar)
 
 # 1. Presentación del Problema
 
-El fenómeno conocido como **"Efecto Pigmalión"** o tambien conocido como profecía autocumplida en el ámbito educativo propone que las expectativas que un profesor tiene sobre el rendimiento de un estudiante pueden influir causalmente en el desempeño real de este. El estudio pionero de Rosenthal y Jacobson (1968), *Pygmalion in the Classroom*, comentó que si a los maestros se les hacía creer que ciertos alumnos eran "promesas intelectuales" (aunque fueran seleccionados al azar),esos alumnos mostraban un incremento real en su **Cociente Intelectual (CI)** al final del año escolar.
+El fenómeno conocido como "Efecto Pigmalión" o tambien conocido como profecía autocumplida en el ámbito educativo propone que las expectativas que un profesor tiene sobre el rendimiento de un estudiante pueden influir causalmente en el desempeño real de este. El estudio pionero de Rosenthal y Jacobson (1968), Pygmalion in the Classroom, comentó que si a los maestros se les hacía creer que ciertos alumnos eran "promesas intelectuales" (aunque fueran seleccionados al azar),esos alumnos mostraban un incremento real en su Cociente Intelectual (CI) al final del año escolar.
 
 Este descubrimiento generó una controversia grande en la psicología educativa y la metodología de la investigación. Mientras algunos estudios posteriores lograron replicar los resultados, otros encontraron efectos nulos o incluso negativos. Entonces Raudenbush (1984) recopiló estos estudios para intentar explicar dicha variabilidad.
 
-El problema que afrontar este trabajo final es la necesidad de sintetizar esta evidencia dispersa. Dado que los estudios individuales presentan resultados contradictorios, el metaanálisis es la herramienta correcta para:
+El problema que afrontar este trabajo final es la necesidad de sintetizar esta evidencia dispersa. Dado que los estudios individuales presentan resultados contradictorios, el metaanálisis es la herramienta correcta para esto.
 
-1.  Estimar un tamaño del efecto global robusto.
-2.  Determinar que características del diseño experimental (heterogeneidad) explican por qué el efecto funciona en algunos estudios y en otros no.
+Trabajamos con el dataset dat.raudenbush1985 de la libreria metadat. El dataset esta conformado por 19 estudios y 10 columnas.
 
 # 2. Metodología Usada
 
@@ -33,9 +32,9 @@ Siguiendo las pautas de Harrer et al. (2021) en Doing Meta-Analysis with R y la 
 
 ## 2.1. Métricas del Tamaño del Efecto
 
-Debido a que los estudios originales miden el desarrollo intelectual(CI) utilizando diferentes medidas, los puntajes directos de cada estudio no son directamente comparables entre elos. Por eso, se utilizó la **Diferencia de Medias Estandarizada (SMD)**.
+Debido a que los estudios originales miden el desarrollo intelectual(CI) utilizando diferentes medidas, los puntajes directos de cada estudio no son directamente comparables entre elos. Por eso, se utilizó la Diferencia de Medias Estandarizada (SMD).
 
-Específicamente, se usará la métrica de Hedges' g. A diferencia de la *d* de Cohen, la *g* de Hedges incluye un factor de corrección *J* que reduce el sesgo positivo que ocurre en muestras pequeñas (comunes en este dataset). La estimación para cada estudio *k* se define como:
+Específicamente, se usará la métrica de Hedges' g. A diferencia de la d de Cohen, la g de Hedges incluye un factor de corrección J que reduce el sesgo positivo que ocurre en muestras pequeñas (comunes en este dataset). La estimación para cada estudio k se define como:
 
 $$ g_k = \frac{\bar{x}_{t} - \bar{x}_{c}}{s_{pooled}} \times J $$
 
@@ -43,13 +42,11 @@ Donde $s_{pooled}$ es la desviación estándar agrupada. En el código de R, est
 
 ## 2.2. Selección del Modelo: Efectos Aleatorios
 
-Se seleccionó un **Modelo de Efectos Aleatorios** (*Random Effects Model*).
-
-**Justificación:** El modelo de efectos fijos asume que todos los estudios estiman el mismo tamaño del efecto verdadero $\theta$ y que la única fuente de variabilidad es el error de muestreo ($\epsilon_k$). Pero, los estudios de Raudenbush difieren en diseño(semanas de contacto), población y procedimientos. Entonces asumir que hay un único efecto verdadero idéntico para todos es irreal. El modelo de efectos aleatorios asume que los efectos verdaderos $\theta_k$ siguen una distribución normal: $$ \theta_k \sim N(\mu, \tau^2) $$ Donde $\tau^2$ representa la varianza entre estudios.
+Se seleccionó un Modelo de Efectos Aleatorios debido a que el modelo de efectos fijos asume que todos los estudios estiman el mismo tamaño del efecto verdadero $\theta$ y que la única fuente de variabilidad es el error de muestreo ($\epsilon_k$). Pero, los estudios de Raudenbush difieren en diseño(semanas de contacto), población y procedimientos. Entonces asumir que hay un único efecto verdadero idéntico para todos es irreal. El modelo de efectos aleatorios asume que los efectos verdaderos $\theta_k$ siguen una distribución normal: $$ \theta_k \sim N(\mu, \tau^2) $$ Donde $\tau^2$ representa la varianza entre estudios.
 
 ### Estimación de la Heterogeneidad ($\tau^2$)
 
-Para estimar $\tau^2$, se utilizó el método de **Máxima Verosimilitud Restringida (REML)** (`method.tau = "REML"`). Este método es preferible al estimador de DerSimonian-Laird debido a que evita el sesgo negativo en la estimación de la varianza, dando resultados más robustos cuando el número de estudios es moderado, como este caso($k=19$).
+Para estimar $\tau^2$, se utilizó el método de Máxima Verosimilitud Restringida. Este método es preferible al estimador de DerSimonian-Laird debido a que evita el sesgo negativo en la estimación de la varianza, dando resultados más robustos cuando el número de estudios es moderado, como este caso($k=19$).
 
 ## 2.3. Evaluación de Datos Faltantes
 
@@ -61,17 +58,7 @@ Se verificó si habia valores perdidos (`NA`) en los tamaños del efecto, varian
 
 Se evaluó si era necesario aplicar un modelo de Metaanálisis Multivariado. Este tipo de análisis se usa cuando los estudios traen múltiples resultados correlacionados para los mismos sujetos o múltiples puntos temporales. En este caso, cada estudio aporta un único tamaño del efecto resumen (CI Global). Dado que los efectos son independientes entre estudios, el modelo univariado de efectos aleatorios es el enfoque estadísticamente correcto.
 
-## 2.5. Estudio de Heterogeneidad y Sesgos
-
-La variabilidad se evaluó mediante:
-
--   **Estadístico** $I^2$: Porcentaje de varianza debida a heterogeneidad real.
--   **Análisis de Outliers:** Detección de intervalos de confianza que no solapan con el intervalo global.
--   **Diagnósticos de Influencia:** Gráficos de Baujat y GOSH Plot.
-
-Para el sesgo de publicación, se usaron métodos gráficos (*Funnel Plot*) y analíticos (Test de regresión de Egger y método *Trim-and-Fill* para imputación de estudios faltantes).
-
-# 3 Resultados I: Modelo General y Heterogeneidad
+## 3. Resultados I: Modelo General y Heterogeneidad
 
 A continuación, se presentan los resultados de la estimación del modelo de efectos aleatorios. Se usó el método de estimación **REML** (Máxima Verosimilitud Restringida) para el parámetro de heterogeneidad $\tau^2$, siendo considerado el enfoque de menor sesgo y más robusto para la estimación de la varianza inter-estudios en metaanálisis con un número chico de estudios (k=19).
 
@@ -90,7 +77,7 @@ m.gen <- metagen(TE = yi,
                  sm = "SMD",
                  method.tau = "REML",    
                  prediction = TRUE)      
-summary(m.gen)
+m.gen
 ```
 
 ### Interpretación Estadística
@@ -102,62 +89,33 @@ La tabla resumen (`summary`) da la base estadística central del metaanálisis. 
 La fila "Random effects model" presenta el resultado combinado ponderado bajo el supuesto de que hay heterogeneidad.
 
 -   **SMD (Tamaño del Efecto):** El valor estimado es 0.0837. Esto indica que, en promedio, el grupo experimental (con expectativas inducidas) superó al grupo control por solo 0.0837 desviaciones estándar. Esto se considera un efecto insignificante.
--   **Intervalo de Confianza:** El intervalo \[-0.0175; 0.1849\] cruza el numero cero.Implicando que con un 95% de confianza el verdadero tamaño del efecto podría ser tanto ligeramente negativo como positivo.
+-   **Intervalo de Confianza:** El intervalo \[-0.0175; 0.1849\] cruza el numero cero. Implicando que con un 95% de confianza el verdadero tamaño del efecto podría ser tanto ligeramente negativo como positivo.
 -   **Estadístico z:** Este valor de prueba indica que la estimación del efecto se aleja 1.62 errores estándar del cero.
 -   **p-valor:** Al ser el valor $p > 0.05$, no se rechaza la hipótesis nula. No existe evidencia estadística suficiente para afirmar que las expectativas del profesor tengan un efecto sobre el Coeficiente Intelectual de los alumnos.
 
-#### 2 Intervalo de Predicción
+#### 2. Intervalo de Predicción
 
-El intervalo de predicción estimado es \[-0.2243; 0.3917\]. A diferencia del intervalo de confianza, este intervalo predice dónde caería el tamaño del efecto de un **futuro estudio**.Que este intervalo sea amplio y que incluya valores negativos demarca la incertidumbre y la dependencia del contexto del efecto Pigmalión: un nuevo experimento podría dar resultados perjudiciales o beneficiosos para los alumnos.
-
-### Visualización: Forest Plot
-
-El *Forest Plot* es la representación gráfica que da una mejor visualizacion Cada cuadrado representa el efecto de un estudio (su tamaño es proporcional al peso del estudio) y el rombo final representa el efecto global.
-
-```{r forest_plot, fig.height=9, fig.width=10}
-forest(m.gen, leftcols = c("studlab"), rightcols = c("effect","ci"))
-```
-
-**Análisis Visual:** Se ve una clara dispersión. Mientras que la mayoría de los estudios (ej: *Rosenthal et al*, *Fielder et al*) se agrupan cerca de la línea central de no efecto(cero), existen casos notables como *Pellegrini & Hicks* (Estudio 4) y *Maxwell* (Estudio 10), donde los intervalos de confianza estan significativamente hacia la derecha con efectos positivos grandes. Esta variedad de efectos que se ven es señal de heterogeneidad.
+El intervalo de predicción estimado es \[-0.2243; 0.3917\]. Que este intervalo sea amplio y que incluya valores negativos demarca la incertidumbre y la dependencia del contexto del efecto Pigmalión.
 
 ## 3.2 Análisis de Heterogeneidad
 
-La heterogeneidad cuantifica la variabilidad en los resultados que no puede explicarse solo por el error de muestreo. Los estadísticos obtenidos son:
-
-#### 2. Heterogeneidad
-
-Se evalúó la variabilidad entre los estudios.
+La heterogeneidad cuantifica la variabilidad en los resultados que no puede explicarse solo por el error de muestreo. Se evalúó la variabilidad entre los estudios.
 
 -   $\tau^2$ (tau\^2): Representa la varianza total entre los efectos verdaderos de los estudios. Un valor distinto de cero confirma la presencia de variabilidad entre estudios.
+
 -   $I^2$ : Este estadístico dice qué porcentaje de la variación total en los estudios se debe a la heterogeneidad y no al azar muestral. El valor 49.8% se clasifica como heterogeneidad moderada,indicando que casi la mitad de la dispersión observada se debe a diferencias reales en los diseños o contextos de los estudios, pudiendo justificando el uso del modelo de efectos aleatorios.
+
 -   **Interpretación:** Dado que $p < 0.01$, se rechaza la hipótesis nula de homogeneidad. Esto confirma que los estudios no comparten un único efecto verdadero entre todos, volviendo a confirmar la decisión de usar un modelo de efectos aleatorios (`method.tau = "REML"`) en lugar de uno de efectos fijos.
 
-### Evaluación Inicial de Sesgo (Funnel Plot Preliminar)
+## 4. Análisis de Valores Atípicos e Influencia
 
-Antes de profundizar en las causas de la heterogeneidad, vemos gráfico de la simetría de los datos y una prueba formal de asimetría.
-
-```{r funnel_inicial, fig.height=6, fig.width=7}
-#grafico de embudo
-funnel(m.gen)
-```
-
-```{r test_regresion_embudo, echo=FALSE}
-# test de regresion para asimetria
-rma_obj <- rma(yi = dat$yi, vi = dat$vi, method = "REML")
-regtest(rma_obj, model = "rma", predictor = "sei")
-```
-
-El gráfico de embudo muestra visualmente una falta de estudios pequeños con resultados negativos. El test de regresión de Egger afirma esta asimetría positiva($p=0.0115$). Esto puede sugerir en un **Sesgo de Publicación**: el efecto global de 0.08 observado está probablemente sobreestimado porque se ha ignorado continuamente los estudios pequeños que no encontraron el efecto Pigmalión.
-
-# 4. Análisis de Valores Atípicos e Influencia
-
-Debido la heterogeneidad moderada-alta ($I^2 \approx 50\%$) , es imprecindible identificar si existen estudios especificos que estén distorsionando el promedio global(**Outliers**).
+Debido la heterogeneidad moderada-alta ($I^2 \approx 50\%$) , es imprecindible identificar si existen estudios especificos que estén distorsionando el promedio global, Outliers.
 
 ## 4.1 Detección de los Outliers
 
 Se utilizó la función `find.outliers`, que identifica estudios donde sus intervalos de confianza no se superponen con el intervalo de confianza del efecto combinado.
 
-```{r outliers, echo=FALSE}
+```{r outliers, echo=FALSE, include=FALSE}
 outliers <- find.outliers(m.gen)
 print(outliers) 
 ```
@@ -173,50 +131,63 @@ print(outliers)
 
 Para confirmar visualmente la influencia de estos estudios, utilizamos un conjunto de diagnósticos gráficos.
 
-```{r influencia, fig.height=6, fig.width=7}
+```{r influencia, echo=FALSE, include=FALSE}
 m.gen.inf <- InfluenceAnalysis(m.gen, random = TRUE)
 
-# grafico baujat
-plot(m.gen.inf, "baujat")      
 ```
 
-**Interpretación del Gráfico de Baujat:** El gráfico de Baujat mapea la contribución de cada estudio a la heterogeneidad global (eje X) frente a su influencia en el resultado del tamaño del efecto global (eje Y).
+```{r, echo=FALSE, fig.height=3, fig.width=5}
+plot(m.gen.inf, "baujat")  
+```
 
--   Los estudios situados en la esquina **superior derecha** son los más problemáticos.
--   Claramente, los estudios identificados previamente (etiquetados numéricamente) se destacan del resto, confirmando que aportan una cantidad desproporcionada de varianza al modelo.
+Este gráfico de baujat muestra simultáneamente cuánto contribuye cada estudio a la heterogeneidad total y cuánto influye sobre el efecto combinado. La mayor parte de los estudios se ubica en la zona inferior izquierda, lo que indica baja influencia y baja contribución a la heterogeneidad; esto sugiere que el conjunto de evidencia es relativamente estable. Sin embargo, algunos estudios se destacan: *Maxwell* presenta la contribución más alta a la heterogeneidad, separándose claramente del resto, mientras que *Pellegrini & Hicks* también aparece como un estudio con contribución moderada. Por otro lado, *Rosenthal & Jacobson* muestra la mayor influencia sobre el efecto global, aunque su contribución a la heterogeneidad es baja.
 
-```{r otros_plots_influencia, echo=FALSE}
+```{r otros_plots_influencia, echo=FALSE, fig.height=3, fig.width=6}
 # graficos adicionales 
 plot(m.gen.inf, "influence")  
+```
+
+El panel de diagnósticos individuales permite evaluar diferentes dimensiones de influencia, residuos estandarizados, valores de Cook, DFFITS, covariance ratio, cambios en tau², cambios en Q, hat values y pesos. Podemos ver como algunos estudios muestran picos ocasionales, como *Maxwell* o *Pellegrini & Hicks*.
+
+```{r, echo=FALSE, fig.height=3.25, fig.width=6}
 plot(m.gen.inf, "ES")          
+
+```
+
+Este gráfico evalúa cómo cambia la estimación del efecto global cuando se omite cada estudio, ordenando los resultados según la magnitud del efecto estimado. El metaanálisis resulta notablemente robusto: la omisión de cualquier estudio produce cambios muy pequeños en la estimación global, que oscila únicamente entre 0.05 y 0.10. Incluso la exclusión de los estudios aparentemente más influyentes (como *Maxwell* o *Rosenthal & Jacobson*) no altera sustancialmente la magnitud ni la dirección del efecto.
+
+```{r, echo=FALSE, fig.height=3.25, fig.width=6}
 plot(m.gen.inf, "I2") 
 ```
 
--   **Gráfico de Influencia:** Barras altas indican estudios que si se eliminaran cambiarían fuertemente los parámetros del modelo.
--   **Gráfico I2:** Muestra como cambiaría el $I^2$ global si se eliminara cada estudio uno por uno. Se observa una caída notable si se eliminan los estudios 4 y 10.
+Este gráfico muestra cómo cambia la heterogeneidad (I²) del metaanálisis al omitir estudios individualmente y ordena los resultados según el valor de I² resultante. Aquí se observa como las variaciones de I² se mantienen en un rango aproximadamente entre 36% y 53%.
 
 ## 4.3 Análisis GOSH (Graphic Display of Study Heterogeneity)
 
 El análisis GOSH ajusta el modelo de metaanálisis a todos los subconjuntos posibles de estudios (combinatoria de $2^{k}-1$ modelos). Dejando ver si los datos provienen de una única población homogénea o si existen clústeres o patrones distintos.
 
-```{r gosh_plot, fig.height=6, fig.width=7}
+```{r gosh, echo=FALSE}
 # Ajuste del modelo con metafor para pasar a GOSH
 m.rma <- rma(yi = dat$yi, sei = dat$seTE, method = "REML", test = "knha")
 
 # Ejecución del algoritmo GOSH
 set.seed(123)
-#res.gosh <- gosh(m.rma)
-#plot(res.gosh, alpha = 0.02)
+res.gosh <- gosh(m.rma)
+
 ```
 
-**Interpretación del GOSH Plot:** Cada punto en el gráfico representa un metaanálisis de un subconjunto de los datos.
+```{r, echo=FALSE}
+plot(res.gosh, alpha = 0.02)
 
--   En el eje X: Tamaño del efecto.
--   En el eje Y: Heterogeneidad ($I^2$ o $H^2$).
--   Una distribución unimodal y compacta indicaría homogeneidad.
--   Si observamos una distribución dispersa, alargada o con múltiples núcleos (nubes de puntos separadas), indica que existen subpoblaciones dentro de los datos que se comportan de manera distinta. En nuestro caso, la dispersión observada refuerza la necesidad de buscar variables moderadoras (subgrupos y regresión) para explicar estos patrones.
+```
 
-# 5. Resultados II: Análisis de Moderadores
+**Interpretación del GOSH Plot:**
+
+El GOSH plot muestra una distribución altamente dispersa y asimétrica de los tamaños de efecto y los niveles de heterogeneidad, lo que indica que distintas combinaciones de estudios producen estimaciones muy diferentes entre sí. La mayor concentración de puntos se ubica cerca de tamaños de efecto pequeños, próximos a cero, pero existe una franja más estrecha que se extiende hacia valores mucho mayores, señalando la presencia de subconjuntos capaces de inflar de forma considerable la magnitud del efecto. En el eje vertical, los valores de **I²** varían desde prácticamente nulos hasta niveles superiores al 80–90%, lo cual sugiere que el grado de heterogeneidad depende fuertemente de qué estudios se incluyan en el modelo. La forma elongada y abierta del gráfico refleja una estructura inestable, donde no existe una única región compacta de soluciones, sino múltiples configuraciones posibles que ponen en duda la robustez del efecto global.
+
+Las salidas numéricas y los resultados de clustering complementan y confirman visualmente lo observado en el GOSH plot. Los estadísticos descriptivos muestran que el tamaño del efecto estimado puede variar desde –0.32 hasta 1.18, mientras que la heterogeneidad presenta un rango extremadamente amplio (I² entre 0% y 95%, tau² desde 0 hasta más de 1). Esto implica que el metaanálisis es sensible a la composición del conjunto de estudios, produciendo soluciones muy divergentes según el subconjunto considerado. A su vez, los métodos de agrupamiento —K-means, DBSCAN y GMM— identificaron múltiples clústeres y coincidieron en señalar consistentemente a los estudios **4, 10, 8 y 17** como posibles outliers o puntos influyentes. Estos estudios parecen ser los responsables de generar las soluciones extremas observadas en el GOSH plot y de fragmentar el espacio de modelos en varias regiones.
+
+## 5. Resultados II: Análisis de Moderadores
 
 Dada la heterogeneidad significativa que se obtuvo ($I^2 \approx 50\%$) y la presencia de *outliers*, no es suficiente quedarse con el efecto global. Es necesario averiguar si ciertas caracteristicas del diseño de los estudios actúan como variables moderadoras.
 
@@ -224,71 +195,39 @@ Dada la heterogeneidad significativa que se obtuvo ($I^2 \approx 50\%$) y la pre
 
 Se analizaron dos variables categóricas: el entorno de instrucción (`setting`) y el conocimiento del evaluador (`tester`). Se compararon modelos asumiendo una varianza entre estudios ($\tau^2$) separada para cada grupo versus una varianza común.
 
-### A) Subgrupo por Entorno
+#### **A) Subgrupo por Entorno (Setting)**
 
-Se investigó si el efecto varía dependiendo de si la generación de expectativas se realizó en grupo (*Group*) o individualmente (*Indiv*).
+Se evaluó si el efecto del Pigmalión difiere entre intervenciones grupales (Group) e individuales (Indiv). Dado que el subgrupo individual incluye pocos estudios (k = 3), se interpretan los modelos con varianza común, que ofrecen estimaciones más estables.
 
-```{r subgrupo_setting, echo=FALSE}
-#modelo con estimaciones separadas de tau cuadrado
-m.setting_separateTau <- update(m.gen, subgroup = setting, tau.common = FALSE)
-summary(m.setting_separateTau)
+**Resultados principales (τ² común):**
 
-# modelo con estimacion comun de tau cuadrado
-m.setting_commonTau <- update(m.gen, subgroup = setting, tau.common = TRUE)
-summary(m.setting_commonTau) 
-```
+-   **Grupal (k = 16):** efecto irrelevante (SMD = 0.05; IC95%: –0.04 a 0.14).
 
-### Interpretación del Análisis de Subgrupos: Entorno
+-   **Individual (k = 3):** efecto moderado y significativo (SMD = 0.38; IC95%: 0.05 a 0.71).
 
-Dado que el subgrupo "individual" cuenta con un número muy bajo de estudios (k=3), se opta por interpretar los resultados del modelo con estimación de varianza común (tau.common = TRUE), ya que ofrece estimaciones más estables que el modelo de varianzas separadas.
+El test entre grupos arroja *Q = 3.58*, p = 0.0586. Aunque no alcanza significación convencional, la diferencia entre efectos (≈0.05 vs. 0.38) muestra una tendencia clara.\
+El efecto Pigmalión prácticamente desaparece en entornos grupales, pero se mantiene y aumenta en interacciones individuales profesor–alumno. El entorno parece ser un moderador relevante.
 
-**Resultados por Subgrupo (Modelo** $\tau^2$ común): 1. **Entorno Grupal (**$k=16$): El tamaño del efecto es irrelevante ($SMD = 0.05$; IC 95%: -0.04 a 0.14). 2. **Entorno Individual (**$k=3$): El tamaño del efecto es moderado y estadísticamente significativo. ($SMD = 0.38$; IC 95%: 0.05 a 0.71)
+#### **B) Subgrupo por Evaluador (Tester)**
 
-**Prueba de Diferencias entre Subgrupos:**El test de heterogeneidad entre grupos (que evalúa la Hipótesis Nula de que los efectos en el grupo "Grupal" e "Individual" son idénticos) arrojó un valor $Q = 3.58$ con un p-valor = 0.0586. **Conclusión:** El resultado es lo suficientemente bajo como para sugerir una fuerte tendencia y una diferencia esencial en la práctica. El p-valor indica que solo hay un 5.86% de probabilidad de que una diferencia tan marcada (entre $SMD \approx 0.05$ y $SMD \approx 0.38$) haya ocurrido puramente por azar. Los datos indican que el efecto de las expectativas docentes se pierde casi por completo en entornos grupales, mientras que en interacciones profesor alumno "uno a uno" (individuales), el efecto Pigmalión parece ser mayor y positivo.
+Se analizó si el conocimiento de las expectativas por parte del evaluador (“aware” vs. “blind”) influía en los resultados, bajo la hipótesis de un posible sesgo del observador. Los subgrupos están equilibrados (k = 10 vs. k = 9).
 
-```{r forest_setting, fig.height=6, fig.width=7}
-#forest plot por subgrupos
-forest(m.setting_separateTau, 
-       xlab = "Diferencia de Media Estandarizada",
-       print.subgroup.name = TRUE)
-```
+**Resultados principales:**
 
-### B) Subgrupo por Evaluador (Tester)
+-   **Evaluadores conscientes:** SMD = 0.046 (IC95%: –0.09 a 0.19).
 
-Se analizó si el hecho de que el evaluador conociera las expectativas (*aware*) o fuera ciego a ellas (*blind*) influia en los resultados (posible sesgo del observador).
+-   **Evaluadores ciegos:** SMD = 0.149 (IC95%: –0.02 a 0.32).
 
-```{r subgrupo_tester, echo=FALSE}
-# modelo con tau^2 separado
-m.tester_separateTau <- update(m.gen, subgroup = tester, tau.common = FALSE)
-summary(m.tester_separateTau)
-
-# modelo con tau^2 comun
-m.tester_commonTau <- update(m.gen, subgroup = tester, tau.common = TRUE)
-summary(m.tester_commonTau)
-
-#visualizacion
-forest(m.tester_separateTau, xlab ="Diferencia de Media Estandarizada")
-```
-
-### Interpretación del Análisis de Subgrupos: Conocimiento del Evaluador (Tester)
-
-Se investigó la hipótesis de que el "Sesgo del Observador" podría estar inflando los resultados. En teoria, si los evaluadores conocen que estudiantes supuestamente tienen un alto potencial ("Aware"), podrían evaluar sus tests de manera más generosa que aquellos que desconocen la condición experimental ("Blind").
-
-Para este análisis, los grupos están relativamente equilibrados en tamaño ($k=10$ para conscientes vs. $k=9$ para ciegos), por lo que los resultados son robustos. A continuación se presentan los hallazgos basados en el modelo de efectos aleatorios:
-
-**Resultados Descriptivos por Subgrupo:** 1. **Evaluadores Conscientes (Aware):** El tamaño del efecto es trivial y cercano a cero ($SMD = 0.046$; IC 95%: -0.09 a 0.19). 2. **Evaluadores Ciegos (Blind):** Sorprendentemente, el efecto estimado es mayor ($SMD = 0.149$; IC 95%: -0.02 a 0.32), aunque sigue siendo estadísticamente no significativo.
-
-**Prueba de Diferencias entre Subgrupos:** El test de heterogeneidad entre grupos dió un estadístico un p-valor = 0.3606.
-
-**Conclusión:** El valor p \> 0.05 indica que no existe una diferencia estadísticamente significativa entre los estudios donde los evaluadores sabían qué alumnos eran "Pigmalión" y los estudios donde no lo sabían. Esto conlleva a dos implicaciones importantes: 1. **Rechazo de la hipótesis del sesgo del observador:** No hay evidencia de que el conocimiento de las expectativas por parte del evaluador haya inflado los puntajes de Conocimeinto Intelectual en estos estudios. 2. **Heterogeneidad no explicada:** A diferencia de la variable "Entorno", la condición del evaluador no ayuda a explicar la variabilidad de los resultados (la heterogeneidad residual $I^2$ permanece alta en 51.6%). Por eso, el conocimiento del evaluador no es un factor relevante en este metaanálisis.
+El p-valor = 0.3606 indica ausencia de diferencias significativas.\
+En conclusion, no hay evidencia de sesgo del observador: conocer las expectativas no aumenta los puntajes. Además, esta variable no explica la heterogeneidad del metaanálisis (I² residual = 51.6%). El conocimiento del evaluador no es un moderador relevante.
 
 ## 5.2. Metaregresión
 
-Aparte de las categorias, la duración del experimento es una variable continua clave. Se ajustó un modelo de metaregresión utilizando la variable `weeks` (semanas de contacto).
+Aparte de las categorias presentadas anteriormente, la duración del experimento es una variable continua clave. Se ajustó un modelo de metaregresión utilizando la variable `weeks` (semanas de contacto).
 
 $$ \theta_k = \beta_0 + \beta_1 \times \text{Weeks}_k + u_k + \epsilon_k $$
 
-```{r metaregresion}
+```{r metaregresion, echo=FALSE, include=FALSE}
 #ajuste del modelo de metaregresión
 mr.weeks <- metareg(m.gen, ~ weeks)
 summary(mr.weeks)
@@ -304,46 +243,29 @@ summary(mr.weeks)
 
 Estos gráficos permiten visualizar la relación lineal entre la duración y el efecto. El tamaño de cada burbuja es proporcional al peso del estudio (inverso de la varianza).
 
-```{r bubble_plots, fig.height=6, fig.width=7}
+```{r bubble_plots, echo=FALSE, fig.height=3, fig.width=6}
 #burbujas etiquetadas por nombre
 bubble(mr.weeks,
        xlab = "Semanas de Contacto",
-       ylab = "Tamaño del Efecto (SMD)",
+       ylab = "Tamaño de Efecto (SMD)",
        studlab = TRUE) 
 
 ```
 
-```{r, echo=FALSE}
-#linea de predicción pred ajusta la linea de regresión
-bubble(mr.weeks,
-       xlab = "Semanas",
-       ylab = "Effect size (SMD)",
-       pred = TRUE)
-```
-
 **Conclusión:** Los estudios cortos tienden a reportar efectos grandes, mientras que los estudios largos reportan efectos nulos. Esto indica que el efecto de las expectativas inducidas es pasajero.
 
-# 6 Evaluación de Sesgos de Publicación
+## 6 Evaluación de Sesgos de Publicación
 
-El sesgo de publicación pasa cuando los estudios con resultados significativos tienen mayor probabilidad de ser publicados. Se evaluó este fenómeno mediante gráficos y pruebas estadísticas formales.
+El sesgo de publicación es un tipo de sesgo que aparece cuando los estudios que muestran resultados positivos, significativos o “interesantes” tienen más probabilidad de ser publicados que los estudios que encuentran resultados nulos, pequeños o no significativos.
 
 ## 6.1 Revisión Gráfica
 
-```{r bias_graficos, fig.height=9, fig.width=9, echo=FALSE}
+Para poder evaluar el sesgo de publicación realizamos tanto un funnel plot como un radial plot, este ultimo fue realizado junto con una línea de Egger permite visualizar de manera explícita la relación entre el tamaño del efecto estandarizado y la precisión de los estudios.
+
+```{r bias_graficos, echo=FALSE, fig.height=3.30, fig.width=5}
 #funnel Plot ya visto
-funnel(m.gen, main = "Funnel plot – Raudenbush 1985")
+funnel(m.gen, main = "Funnel plot – Raudenbush 1985", contour = c(0.90, 0.95, 0.99),col.contour = c("darkgray", "gray", "lightgray"))
 
-#radial Plot
-radial(m.gen, main = "Radial plot – Raudenbush 1985")
-```
-
-En el Funnel Plot anteriormente ya visto, la asimetría que tiene sugiere que faltan estudios pequeños con efectos negativos.
-
-## 6.2. Prueba de Regresión de Egger
-
-Verificar la relación entre el efecto estandarizado y su precisión.
-
-```{r egger_manual}
 # raidal base
 radial(m.gen, main = "Radial plot con línea de Egger")
 
@@ -357,106 +279,73 @@ egger_model <- lm(yi_over_se ~ inv_se)
 # visualizacion de la linea de regresion sobre el radial plot
 abline(egger_model, lwd = 2, col = "red")
 
-#resumen estadístico del modelo manual
-summary(egger_model)
+
 ```
 
-Para visualizar y confirmar analíticamente la asimetría detectada, se calculó la regresión de Egger sobre las coordenadas del Gráfico Radial. Este procedimiento transforma los datos para evaluar la relación entre la magnitud del efecto estandarizado y su precisión.
+El funnel plot muestra una asimetría clara: los estudios pequeños tienden a reportar efectos más positivos, mientras que faltan estudios pequeños con efectos negativos, lo que sugiere posible sesgo de publicación.
 
-**Procedimiento:** 1. **Variables:** Se generaron las coordenadas del Radial Plot: \* Variable Dependiente (`yi_over_se`): Es el tamaño del efecto estandarizado ($z\text{-score} = \theta_k / SE_k$). \* Variable Independiente (`inv_se`): Es la precisión del estudio ($1 / SE_k$). 2. **Modelo:** Se ajustó un modelo de regresión lineal simple (`lm`). En este espacio transformado, la pendiente de la línea de regresión estima el efecto global, mientras que el **intercepto** estima el sesgo.
+El radial plot refuerza esta evidencia: la pendiente positiva indica que los estudios menos precisos exhiben efectos más grandes, mientras que los más precisos muestran efectos modestos. La dispersión irregular también apunta a heterogeneidad no explicada.
 
-**Interpretación de los Resultados del Modelo:**
+La línea del test de Egger presenta una pendiente negativa marcada, lo que implica que los estudios con mayor error estándar reportan efectos inflados. Este patrón es típico de small-study effects y respalda la conclusión de que el metaanálisis presenta asimetría y que el efecto global podría estar sobreestimado por la influencia de estudios pequeños.
 
--   **Intercepto (Bias):** El coeficiente del intercepto es **1.6243**. En ausencia de sesgo de publicación, esta línea debería pasar por el origen (intercepto = 0). Un valor de 1.62 sugiere que los estudios pequeños (con menor precisión) tienden a reportar efectos sistemáticamente mayores.
--   **Significancia Estadística:** El p-valor asociado al intercepto es **0.0574**.
-    -   Este valor se encuentra en el límite de la significancia estadística (ligeramente superior a 0.05).
-    -   **Conclusión:** Aunque estrictamente no se rechaza la hipótesis nula de simetría al nivel del 5% con este método específico, el resultado es **marginalmente significativo**. Esto aporta evidencia sugestiva (aunque no definitiva por sí sola bajo este método) de que existe asimetría en la literatura, reforzando la necesidad de aplicar métodos de corrección como *Trim-and-Fill* para asegurar la robustez de las conclusiones.
+## 6.2. Pruebas Formales de Asimetría (Metabias)
 
-## 6.3. Pruebas Formales de Asimetría (Metabias)
+Se aplicaron las variantes robustas de las pruebas de asimetría disponibles en la librería `meta`. Es decir que fueron realizadas la prueba de correlación de rangos, la prueba de regresión lineal y la prueba con estimador MM.
 
-Se aplicaron las variantes robustas de las pruebas de asimetría disponibles en la librería `meta`.
+Los tres métodos de detección de asimetría del funnel plot muestran un patrón consistente: hay señales de posible sesgo de publicación, aunque el grado de evidencia varía según el test.
 
-```{r metabias_tests}
-# 1. Prueba de correlación de rangos (Begg & Mazumdar)
-metabias(m.gen, method = "rank")
+**Test de Begg (rank correlation):**\
+El test de Begg arroja un resultado marginal (z = 1.79, p = 0.074).\
+Esto sugiere una indicación débil de asimetría, pero no alcanza significación convencional (p \< .05).\
+Dado que el test de Begg tiene baja potencia con k reducido (como aquí, con 19 estudios), un p cercano a 0.05 puede interpretarse como una señal pero no como evidencia concluyente.
 
-# 2. Prueba de regresión lineal (Egger clásico)
-metabias(m.gen, method = "linreg")
+**Egger clásico (método = "linreg"):**\
+El test de Egger estándar produce un resultado casi significativo (t = 2.04, p = 0.057), de nuevo en el límite.\
+Esto indica una tendencia hacia la asimetría, coherente con lo observado visualmente en el funnel plot, pero que aún no supera el umbral clásico de significación.\
+Con muestras pequeñas, Egger también tiende a ser inestable y sensible a heterogeneidad alta.
 
-# 3. Prueba con estimador MM (Thompson & Sharp)
-metabias(m.gen, method = "mm")
-```
-
-La consistencia entre estos métodos (especialmente si los p-valores son \< 0.05 o \< 0.10) refuerza la conclusión de que existe un sesgo de publicación en este conjunto de datos.
+**Egger modificado (método = "mm", Thompson & Sharp, REML):**\
+Este test, más robusto cuando existe heterogeneidad, sí resulta estadísticamente significativo (t = 2.53, p = 0.0218).\
+Dado que este método ajusta la heterogeneidad de manera más apropiada mediante un modelo mixto con tau² aditiva, se considera un método más confiable bajo condiciones como las de nuestro metaanálisis.\
+La significación aquí sugiere asimetría real del funnel plot y, por ende, evidencia más sólida de sesgo de publicación.
 
 ## 6.4. Método Trim-and-Fill (Recortar y Rellenar)
 
 Para corregir el impacto del sesgo de publicación, se utilizó el método *Trim-and-Fill*. Este algoritmo imputa los estudios teóricamente "faltantes" para restaurar la simetría del *Funnel Plot* y recalcula el efecto global ajustado.
 
-```{r trim_fill}
+```{r trim_fill, echo=FALSE}
 # Aplicación del algoritmo
 tf <- trimfill(m.gen)
-
-# Resumen del modelo ajustado (con estudios imputados)
-summary(tf)
 
 # Visualización del Funnel Plot con estudios imputados (puntos rellenos)
 funnel(tf, main = "Trim and fill – Raudenbush 1985")
 ```
 
-**Interpretación Final del Sesgo:** Observamos cuántos estudios fueron añadidos (imputados) y cómo cambia el efecto global (`SMD`). Si el efecto ajustado es mucho menor que el original (o cruza el cero), confirmamos que el sesgo de publicación estaba inflando artificialmente los resultados iniciales.
+El método trim-and-fill detecta asimetría en el funnel plot y estima que faltan tres estudios con efectos negativos. Al imputarlos, el efecto combinado cae a 0.028 (IC95%: –0.117 a 0.173; p = 0.70), totalmente compatible con cero. Esto indica que el efecto positivo observado inicialmente dependía en parte de estudios pequeños con efectos grandes, en línea con la evidencia previa de Begg, Egger y el radial plot.
 
-# 7. Estudio de Tamaño de Muestra y Potencia
+Pese al ajuste, la heterogeneidad sigue siendo moderada-alta (I² = 64%) y el intervalo de predicción amplio (–0.57 a 0.63) muestra que los efectos futuros podrían ser tanto negativos como positivos. En conjunto, tras corregir la asimetría, no queda evidencia de un efecto promedio consistente.
 
-Siguiendo las pautas del trabajo final ("Estudio de tamaño de muestra y potencia") y utilizando la metodología descrita en el material complementario del curso (*Metapower.pdf*), se realizó un análisis de potencia *post-hoc* (retrospectivo).
+## 7. Estudio de Tamaño de Muestra y Potencia
 
-El objetivo es determinar si el metaanálisis tenía la sensibilidad estadística suficiente para detectar un efecto, dado el número de estudios ($k=19$) y la heterogeneidad observada.
+En este análisis de potencia se evaluó la capacidad del metaanálisis para detectar efectos del tamaño esperado bajo distintos supuestos. Se trabajó con un total previsto de 19 estudios, cada uno con un tamaño muestral esperado de 102 participantes, y se consideraron dos valores esperados del efecto, d = 0.1 y d = 0.2. Además, se examinó cómo varía la potencia bajo un modelo de efectos fijos y un modelo de efectos aleatorios con I² = 50%.
 
-```{r power_analysis}
-# Carga de la librería para análisis de potencia (según PDF adjunto)
-library(metapower)
-
-# Parámetros basados en los resultados observados en la Parte 1 y 2:
-# - effect_size: 0.08 (El efecto global que encontramos)
-# - study_size: 60 (Promedio aproximado de participantes por estudio en el dataset)
-# - k: 19 (Número de estudios)
-# - i2: 0.50 (Heterogeneidad aproximada del 50%)
-
-power_result <- mpower(effect_size = 0.08, 
-                       study_size = 60, 
-                       k = 19, 
-                       i2 = 0.50, 
-                       es_type = "d")
-
-print(power_result)
-```
-
-### Interpretación de la Potencia
-
-El análisis revela que la potencia estadística para detectar un efecto tan pequeño ($d=0.08$) con la heterogeneidad existente es **baja** (inferior al 20%). Esto significa que existe una alta probabilidad de cometer un **Error Tipo II** (falso negativo). Sin embargo, esto también sugiere que si el efecto fuera realmente grande o moderado (ej. $d=0.5$), el metaanálisis lo habría detectado. El hecho de no haber encontrado significancia estadística refuerza la idea de que el "Efecto Pigmalión", de existir, es un fenómeno de magnitud muy pequeña o altamente dependiente del contexto.
+El análisis revela que, para un d = 0.1, la potencia \~60% y en efectos aleatorios \~36%. Esto implica que un efecto tan débil podría pasar inadvertido, especialmente en presencia de heterogeneidad entre estudios. En contraste, para d = 0.2, la potencia se vuelve muy alta en el modelo de efectos fijos \~99% y sólida en el modelo de efectos aleatorios \~87%. En conjunto, estos resultados indican que, con la evidencia disponible, el metaanálisis tiene buena capacidad para detectar efectos moderados, pero no está bien equipado para identificar efectos muy pequeños.
 
 # 8. Discusión y Alcance de los Resultados
 
-Este trabajo ha sintetizado la evidencia de 19 experimentos sobre la inducción de expectativas docentes. Los resultados desafían la narrativa convencional y simplista sobre la potencia de las expectativas del profesor.
+El metaanálisis de 19 estudios muestra que el efecto Pigmalión, medido sobre desempeño cognitivo, es pequeño, inconsistente y altamente dependiente del contexto. El efecto promedio no es significativo y presenta heterogeneidad moderada, evidenciada tanto en los tests de heterogeneidad como en los análisis gráficos e influenciales. Aunque algunos estudios individuales influyen fuertemente en el tamaño del efecto, incluso al removerlos el resultado global se mantiene cercano a cero.
 
-1.  **Efecto Global Nulo:** Al contrarío de lo que sugiere la literatura clásica (Rosenthal & Jacobson, 1968), nuestro metaanálisis de efectos aleatorios no encontró evidencia significativa de un efecto global ($p = 0.10$). Tras ajustar por el sesgo de publicación detectado (mediante *Trim-and-Fill*), el efecto se reduce prácticamente a cero ($SMD_{ajustado} = 0.02$).
-2.  **El Rol Crítico del Tiempo (Metaregresión):** El hallazgo más robusto y revelador de este estudio proviene del análisis de metaregresión. La variable `weeks` mostró una relación inversa significativa ($p < 0.01$).
-    -   Los estudios de contacto muy breve (0-2 semanas) mostraron efectos grandes.
-    -   Los estudios de mayor duración mostraron efectos nulos.
-    -   **Alcance:** Esto sugiere que las expectativas inducidas artificialmente son efímeras. Los profesores pueden alterar su comportamiento inicialmente basándose en la información falsa recibida, pero conforme pasa el tiempo (semanas), la interacción real con el alumno y su desempeño objetivo prevalecen sobre la expectativa inducida, haciendo desaparecer el efecto.
-3.  **Heterogeneidad Explicada:** El modelo logró explicar una gran parte de la varianza ($R^2 \approx 40\%$) a través de la duración del contacto, lo que indica que la inconsistencia en la literatura previa no era aleatoria, sino sistemática y dependiente del diseño temporal.
+Los análisis de moderadores indican que el entorno individual muestra efectos mayores que el grupal, aunque con pocos estudios. El moderador más importante es la duración del experimento, que explica una proporción sustancial de la variabilidad: los estudios breves reportan efectos más altos, mientras que los de mayor duración no muestran impacto. Además, existe evidencia consistente de sesgo de publicación, ya que los estudios pequeños tienden a inflar el efecto y los métodos de corrección reducen el tamaño del efecto a valores prácticamente nulos.
 
-# 9. Conclusiones y Futuros Pasos
+En conjunto, los resultados sugieren que el efecto Pigmalión no es un fenómeno robusto, sino uno que aparece en condiciones específicas, tiende a ser efímero y está afectado por sesgos de la literatura.
 
-En base al análisis estadístico realizado, se concluye que:
+## 9. Conclusiones y Futuros Pasos
 
-1.  **No existe evidencia robusta** para afirmar que las expectativas docentes aumenten el CI de los alumnos de manera generalizada.
-2.  **La duración modera el efecto:** El fenómeno parece ser un artefacto de corto plazo que se diluye rápidamente con la experiencia directa del docente.
-3.  **Sesgo de Publicación:** Existe evidencia de que los estudios pequeños con resultados negativos han sido sistemáticamente menos publicados, inflando la percepción histórica del efecto.
+En base al análisis estadístico realizado, se concluye que el efecto global es pequeño, no significativo y sensible al contexto, la duración del experimento es el moderador más claro: efectos iniciales desaparecen con el tiempo., las intervenciones individuales muestran mayor efecto que las grupales, aunque con evidencia limitada, hay sesgo de publicación que amplifica artificialmente el efecto en estudios pequeños y que la heterogeneidad es moderada y solo parcialmente explicada por los moderadores analizados.
 
-**Futuros Pasos:** Se recomienda que futuras investigaciones abandonen el uso del CI global como variable dependiente, ya que es una medida estable y difícil de modificar, y se enfoquen en variables más sensibles como el rendimiento académico específico, la autoeficacia o la motivación del estudiante, controlando rigurosamente el tiempo de exposición.
+Se recomienda que futuras investigaciones abandonen el uso del CI global como variable dependiente, ya que es una medida estable y difícil de modificar, y se enfoquen en variables más sensibles como el rendimiento académico específico, la autoeficacia o la motivación del estudiante, controlando rigurosamente el tiempo de exposición. Realizar estudios contemporáneos y preregistrados para reducir sesgo de publicación y explorar directamente cómo las expectativas modifican el comportamiento docente.
 
-# 10. Referencias Bibliográficas
+## 10. Referencias Bibliográficas
 
 -   Harrer, M., Cuijpers, P., Furukawa, T.A., & Ebert, D.D. (2021). *Doing Meta-Analysis with R: A Hands-On Guide*. Chapman & Hall/CRC Press.
 -   Raudenbush, S. W. (1984). Magnitude of teacher expectancy effects on pupil IQ as a function of the credibility of expectancy induction: A synthesis of findings from 18 experiments. *Journal of Educational Psychology*, 76(1), 85–97.
@@ -469,6 +358,8 @@ En base al análisis estadístico realizado, se concluye que:
 # Generación automática de citas para los paquetes usados
 print(citation("meta"), bibtex=FALSE)
 print(citation("dmetar"), bibtex=FALSE)
+print(citation("metadat"), bibtex=FALSE)
+print(citation("metapower"), bibtex=FALSE)
 ```
 
 \newpage
@@ -476,3 +367,296 @@ print(citation("dmetar"), bibtex=FALSE)
 # Apéndice: Sentencias de R Utilizadas
 
 Para garantizar la reproducibilidad de este estudio, se adjunta la totalidad del código utilizado, el cual se ha presentado y ejecutado a lo largo de las secciones previas de este documento dinámico.
+
+```{r}
+library(meta)
+library(metafor)
+library(dmetar)
+```
+
+```{r}
+dat <- dat.raudenbush1985
+dat
+
+dat$seTE <- sqrt(dat$vi)
+m.gen <- metagen(TE = yi,
+                 seTE = seTE,
+                 data = dat,
+                 studlab = paste(study, author, sep=": "),
+                 sm = "SMD",
+                 method.tau = "REML",    
+                 prediction = TRUE)     
+summary(m.gen)
+```
+
+```{r}
+forest(m.gen, leftcols = c("studlab"), rightcols = c("effect","ci"))
+funnel(m.gen)
+```
+
+```{r}
+rma_obj <- rma(yi = dat$yi, vi = dat$vi, method = "REML")
+regtest(rma_obj, model = "rma", predictor = "sei")
+```
+
+```{r}
+outliers <- find.outliers(m.gen)
+outliers 
+```
+
+```{r}
+m.gen.inf <- InfluenceAnalysis(m.gen, random = TRUE)
+plot(m.gen.inf, "baujat")     
+plot(m.gen.inf, "influence")  
+plot(m.gen.inf, "ES")         
+plot(m.gen.inf, "I2") 
+```
+
+```{r}
+m.rma <- rma(yi = dat$yi, sei = dat$seTE, method = "REML", test = "knha")
+set.seed(123)
+res.gosh <- gosh(m.rma)
+plot(res.gosh, alpha = 0.02)
+```
+
+```{r}
+res.gosh.diagnos <- gosh.diagnostics(res.gosh, km.params = list(centers = 2), db.params = list(eps=0.08, MinPts=50))
+res.gosh.diagnos
+plot(res.gosh.diagnos)
+```
+
+```{r}
+# A) Subgrupo por 'setting'
+#Primero con tau.common = FALSE (estimaciones separadas de tau^2 por subgrupo)
+m.setting_separateTau <- update(m.gen, subgroup = setting, tau.common = FALSE)
+summary(m.setting_separateTau)
+
+#Luego con tau.common = TRUE (misma estimación tau^2 para todos los subgrupos)
+m.setting_commonTau <- update(m.gen, subgroup = setting, tau.common = TRUE)
+summary(m.setting_commonTau)
+
+# Forest plot por subgrupos (ajustá xlim/cex si es necesario)
+forest(m.setting_separateTau, xlab = "Diferencia de Media Estandarizada")
+       print.subgroup.name = TRUE
+```
+
+```{r}
+# B) Subgrupo por 'tester' (aware vs blind)
+m.tester_separateTau <- update(m.gen, subgroup = tester, tau.common = FALSE)
+summary(m.tester_separateTau)
+
+m.tester_commonTau <- update(m.gen, subgroup = tester, tau.common = TRUE)
+summary(m.tester_commonTau)
+
+forest(m.tester_separateTau, xlab ="Diferencia de Media Estandarizada")
+```
+
+```{r}
+mr.weeks <- metareg(m.gen, ~ weeks)
+summary(mr.weeks)
+
+bubble(mr.weeks,
+       xlab = "Semanas",
+       ylab = "Tamaño de Efecto)",
+       studlab = TRUE) 
+```
+
+```{r}
+funnel(m.gen, main = "Funnel plot – Raudenbush 1985", contour = c(0.90, 0.95, 0.99),col.contour = c("darkgray", "gray", "lightgray"))
+
+```
+
+```{r}
+# Radial con Egger-
+radial(m.gen, main = "Radial plot con línea de Egger")
+
+# Crear variables de Egger
+yi_over_se  <- m.gen$TE / m.gen$seTE      # yi / SEi
+inv_se      <- 1 / m.gen$seTE             # 1 / SEi
+
+# Ajustar modelo de Egger (regresión lineal)
+egger_model <- lm(yi_over_se ~ inv_se)
+
+# Agregar la línea de Egger al radial plot
+abline(egger_model, lwd = 2)
+```
+
+```{r}
+metabias(m.gen, method = "rank")
+
+metabias(m.gen, method = "linreg")
+
+metabias(m.gen, method = "mm")
+```
+
+```{r}
+tf <- trimfill(m.gen)
+summary(tf)
+funnel(tf, main = "Trim and fill – Raudenbush 1985")
+```
+
+```{r}
+#al no haber datos faltantes seguimos el procedimiento del libro y modificamos los datos agregandole datos flatantes, a pesar de no formar parte de nuestro trabajo final nos parecio correcto incluirlo en el apendice
+
+set.seed(123)
+dat2 <- dat
+
+# columnas básicas
+dat2$n1i <- as.integer(dat2$n1i)
+dat2$n2i <- as.integer(dat2$n2i)
+dat2$TE   <- dat2$yi
+dat2$seTE <- sqrt(dat2$vi)
+
+# Elegimos estudios más precisos
+ord <- order(dat2$seTE)
+sel7 <- ord[1:7]
+sel_missing <- sel7[c(3,5)]
+
+# Definir pérdidas
+dat2$Nem <- 0
+dat2$Ncm <- 0
+dat2$Nem[sel_missing] <- c(8,5)
+dat2$Ncm[sel_missing] <- dat2$Nem[sel_missing]
+
+# Observados por brazo
+dat2$Neo <- dat2$n1i - dat2$Nem
+dat2$Nco <- dat2$n2i - dat2$Ncm
+
+# Proporciones faltantes
+dat2$Pe <- dat2$Nem / dat2$n1i
+dat2$Pc <- dat2$Ncm / dat2$n2i
+
+# Metaanálisis basado en los datos observados (pre-ajuste)
+m.gen.miss <- metagen(
+  TE = dat2$TE,
+  seTE = dat2$seTE,
+  data = dat2,
+  studlab = paste(dat2$study, dat2$author, sep=": "),
+  sm = "SMD",
+  method.tau = "REML",
+  prediction = TRUE
+)
+
+summary(m.gen.miss)
+
+# semiss: función del libro Schwarzer et al. (2015), cap. 6
+
+semiss <- function(TE, seTE, mu.e, mu.c, nu.e, nu.c, rho){
+  
+  # Delta para cada estudio
+  delta.e <- rnorm(length(TE), mean = mu.e, sd = nu.e)
+  delta.c <- rnorm(length(TE), mean = mu.c, sd = nu.c)
+  
+  # Correlación entre brazos
+  if (rho != 0) {
+    delta.c <- rho * delta.e + sqrt(1 - rho^2) * delta.c
+  }
+  
+  # Ajustar TE
+  TE.star <- TE + delta.e - delta.c
+  
+  # Ajustar varianza
+  seTE.star <- sqrt(seTE^2 + nu.e^2 + nu.c^2 - 2*rho*nu.e*nu.c)
+  
+  return(list(TE = TE.star, seTE = seTE.star))
+}
+
+mu <- 8
+nu <- sqrt(5)
+
+# Convenience:
+TE  <- dat2$yi
+seT <- dat2$seTE
+
+#fixed equal
+S1 <- semiss(TE, seT, mu.e = mu, mu.c = mu, nu.e = 0, nu.c = 0, rho = 0)
+
+m.S1 <- metagen(
+  TE = S1$TE,
+  seTE = S1$seTE,
+  studlab = paste(dat2$study, dat2$author),
+  sm = "SMD",
+  method.tau = "REML"
+)
+summary(m.S1)
+
+#fixed opposite
+S2 <- semiss(TE, seT, mu.e = mu, mu.c = -mu, nu.e = 0, nu.c = 0, rho = 0)
+
+m.S2 <- metagen(
+  TE = S2$TE,
+  seTE = S2$seTE,
+  studlab = paste(dat2$study, dat2$author),
+  sm = "SMD",
+  method.tau = "REML"
+)
+summary(m.S2)
+
+#random equal
+S3 <- semiss(TE, seT, mu.e = mu, mu.c = mu, nu.e = nu, nu.c = nu, rho = 1)
+
+m.S3 <- metagen(
+  TE = S3$TE,
+  seTE = S3$seTE,
+  studlab = paste(dat2$study, dat2$author),
+  sm = "SMD",
+  method.tau = "REML"
+)
+summary(m.S3)
+
+#random equal
+S4 <- semiss(TE, seT, mu.e = mu, mu.c = -mu, nu.e = nu, nu.c = nu, rho = 0)
+
+m.S4 <- metagen(
+  TE = S4$TE,
+  seTE = S4$seTE,
+  studlab = paste(dat2$study, dat2$author),
+  sm = "SMD",
+  method.tau = "REML"
+)
+summary(m.S4)
+
+#graficos
+forest(m.S1, main="Missing Data — Fixed Equal")
+forest(m.S2, main="Missing Data — Fixed Opposite")
+forest(m.S3, main="Missing Data — Random Equal")
+forest(m.S4, main="Missing Data — Random Uncorrelated")
+
+funnel(m.S1,
+       main = "Funnel plot — Missing Data: Fixed Equal",
+       xlab = "Effect size (SMD)")
+
+funnel(m.S2,
+       main = "Funnel plot — Missing Data: Fixed Opposite",
+       xlab = "Effect size (SMD)")
+
+funnel(m.S3,
+       main = "Funnel plot — Missing Data: Random Equal",
+       xlab = "Effect size (SMD)")
+
+funnel(m.S4,
+       main = "Funnel plot — Missing Data: Random Uncorrelated",
+       xlab = "Effect size (SMD)")
+```
+
+```{r}
+library(metapower)
+
+n_exp  <- mean((dat$n1i + dat$n2i)/2)
+
+
+```
+
+```{r}
+my_power1<- mpower(effect_size = .1, study_size =n_exp, k = 19,i2 = .50, es_type = "d")
+my_power1
+plot_mpower(my_power1)
+
+
+```
+
+```{r}
+my_power2<- mpower(effect_size = .2, study_size =n_exp, k = 19, i2 = .50, es_type = "d")
+my_power2
+plot_mpower(my_power2)
+```
