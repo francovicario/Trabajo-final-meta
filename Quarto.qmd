@@ -52,13 +52,13 @@ Para estimar $\tau^2$, se utilizó el método de Máxima Verosimilitud Restringi
 
 Se inspeccionó el conjunto de datos `raudenbush1985`.
 
-Se verificó si habia valores perdidos (`NA`) en los tamaños del efecto, varianzas y moderadores (weeks, setting,tester). El dataset se encuentra completo para las variables de interés. No fue necesario aplicar técnicas de imputación múltiple o análisis de sensibilidad por datos faltantes, ya que todos los estudios reportaron los estadísticos necesarios para el cálculo del tamaño del efecto.
+Se verificó si habia valores perdidos (`NA`) en los tamaños del efecto, varianzas y moderadores (weeks, setting,tester). El dataset está completo para las variables de interés. No fue necesario aplicar técnicas de imputación múltiple o análisis de sensibilidad por datos faltantes, ya que todos los estudios tienen los estadísticos necesarios para el cálculo del tamaño del efecto.
 
 ## 2.4. Pertinencia del Análisis Multivariado
 
-Se evaluó si era necesario aplicar un modelo de Metaanálisis Multivariado. Este tipo de análisis se usa cuando los estudios traen múltiples resultados correlacionados para los mismos sujetos o múltiples puntos temporales. En este caso, cada estudio aporta un único tamaño del efecto resumen (CI Global). Dado que los efectos son independientes entre estudios, el modelo univariado de efectos aleatorios es el enfoque estadísticamente correcto.
+Se evaluó si era necesario aplicar un modelo de Metaanálisis Multivariado. Este tipo de análisis se usa cuando los estudios traen múltiples resultados correlacionados para los mismos sujetos o múltiples puntos temporales. En este caso, cada estudio aporta un único tamaño del efecto resumen (Coeficiente Intelectual Global). Dado que los efectos son independientes entre estudios, el modelo univariado de efectos aleatorios es el enfoque correcto.
 
-## 3. Resultados I: Modelo General y Heterogeneidad
+# 3. Resultados I: Modelo General y Heterogeneidad
 
 A continuación, se presentan los resultados de la estimación del modelo de efectos aleatorios. Se usó el método de estimación **REML** (Máxima Verosimilitud Restringida) para el parámetro de heterogeneidad $\tau^2$, siendo considerado el enfoque de menor sesgo y más robusto para la estimación de la varianza inter-estudios en metaanálisis con un número chico de estudios (k=19).
 
@@ -86,7 +86,7 @@ La tabla resumen (`summary`) da la base estadística central del metaanálisis. 
 
 #### 1. Estimación del Efecto Global (Modelo de Efectos Aleatorios)
 
-La fila "Random effects model" presenta el resultado combinado ponderado bajo el supuesto de que hay heterogeneidad.
+La fila "Random effects model" muestra el resultado combinado ponderado bajo el supuesto de que hay heterogeneidad.
 
 -   **SMD (Tamaño del Efecto):** El valor estimado es 0.0837. Esto indica que, en promedio, el grupo experimental (con expectativas inducidas) superó al grupo control por solo 0.0837 desviaciones estándar. Esto se considera un efecto insignificante.
 -   **Intervalo de Confianza:** El intervalo \[-0.0175; 0.1849\] cruza el numero cero. Implicando que con un 95% de confianza el verdadero tamaño del efecto podría ser tanto ligeramente negativo como positivo.
@@ -107,7 +107,7 @@ La heterogeneidad cuantifica la variabilidad en los resultados que no puede expl
 
 -   **Interpretación:** Dado que $p < 0.01$, se rechaza la hipótesis nula de homogeneidad. Esto confirma que los estudios no comparten un único efecto verdadero entre todos, volviendo a confirmar la decisión de usar un modelo de efectos aleatorios (`method.tau = "REML"`) en lugar de uno de efectos fijos.
 
-## 4. Análisis de Valores Atípicos e Influencia
+# 4. Análisis de Valores Atípicos e Influencia
 
 Debido la heterogeneidad moderada-alta ($I^2 \approx 50\%$) , es imprecindible identificar si existen estudios especificos que estén distorsionando el promedio global, Outliers.
 
@@ -140,7 +140,7 @@ m.gen.inf <- InfluenceAnalysis(m.gen, random = TRUE)
 plot(m.gen.inf, "baujat")  
 ```
 
-Este gráfico de baujat muestra simultáneamente cuánto contribuye cada estudio a la heterogeneidad total y cuánto influye sobre el efecto combinado. La mayor parte de los estudios se ubica en la zona inferior izquierda, lo que indica baja influencia y baja contribución a la heterogeneidad; esto sugiere que el conjunto de evidencia es relativamente estable. Sin embargo, algunos estudios se destacan: *Maxwell* presenta la contribución más alta a la heterogeneidad, separándose claramente del resto, mientras que *Pellegrini & Hicks* también aparece como un estudio con contribución moderada. Por otro lado, *Rosenthal & Jacobson* muestra la mayor influencia sobre el efecto global, aunque su contribución a la heterogeneidad es baja.
+Este gráfico de baujat muestra simultáneamente cuánto contribuye cada estudio a la heterogeneidad total y cuánto influye sobre el efecto combinado. La mayor parte de los estudios se ubica en la zona inferior izquierda, mostrando una baja influencia y baja contribución a la heterogeneidad; esto sugiere que el conjunto de evidencia es relativamente estable. Sin embargo, algunos estudios como *Maxwell* presenta la contribución más alta a la heterogeneidad, que se separa claramente del resto, mientras que *Pellegrini & Hicks* también aparece como un estudio con contribución moderada. Por otro lado, *Rosenthal & Jacobson* muestra la mayor influencia sobre el efecto global, aunque su contribución a la heterogeneidad es baja comparada con las 2 anteriores.
 
 ```{r otros_plots_influencia, echo=FALSE, fig.height=3, fig.width=6}
 # graficos adicionales 
@@ -154,7 +154,7 @@ plot(m.gen.inf, "ES")
 
 ```
 
-Este gráfico evalúa cómo cambia la estimación del efecto global cuando se omite cada estudio, ordenando los resultados según la magnitud del efecto estimado. El metaanálisis resulta notablemente robusto: la omisión de cualquier estudio produce cambios muy pequeños en la estimación global, que oscila únicamente entre 0.05 y 0.10. Incluso la exclusión de los estudios aparentemente más influyentes (como *Maxwell* o *Rosenthal & Jacobson*) no altera sustancialmente la magnitud ni la dirección del efecto.
+Este gráfico evalúa cómo cambia la estimación del efecto global cuando se omite cada estudio, ordenando los resultados según la magnitud del efecto estimado. El metaanálisis resulta robusto: quitar cualquier estudio produce cambios muy pequeños en la estimación global, que oscila únicamente entre 0.05 y 0.10. Incluso la exclusión de los estudios aparentemente más influyentes (como *Maxwell* o *Rosenthal & Jacobson*) no altera de gran manera el tamaño de efecto.
 
 ```{r, echo=FALSE, fig.height=3.25, fig.width=6}
 plot(m.gen.inf, "I2") 
@@ -187,7 +187,7 @@ El GOSH plot muestra una distribución altamente dispersa y asimétrica de los t
 
 Las salidas numéricas y los resultados de clustering complementan y confirman visualmente lo observado en el GOSH plot. Los estadísticos descriptivos muestran que el tamaño del efecto estimado puede variar desde –0.32 hasta 1.18, mientras que la heterogeneidad presenta un rango extremadamente amplio (I² entre 0% y 95%, tau² desde 0 hasta más de 1). Esto implica que el metaanálisis es sensible a la composición del conjunto de estudios, produciendo soluciones muy divergentes según el subconjunto considerado. A su vez, los métodos de agrupamiento —K-means, DBSCAN y GMM— identificaron múltiples clústeres y coincidieron en señalar consistentemente a los estudios **4, 10, 8 y 17** como posibles outliers o puntos influyentes. Estos estudios parecen ser los responsables de generar las soluciones extremas observadas en el GOSH plot y de fragmentar el espacio de modelos en varias regiones.
 
-## 5. Resultados II: Análisis de Moderadores
+# 5. Resultados II: Análisis de Moderadores
 
 Dada la heterogeneidad significativa que se obtuvo ($I^2 \approx 50\%$) y la presencia de *outliers*, no es suficiente quedarse con el efecto global. Es necesario averiguar si ciertas caracteristicas del diseño de los estudios actúan como variables moderadoras.
 
@@ -243,7 +243,7 @@ summary(mr.weeks)
 
 Estos gráficos permiten visualizar la relación lineal entre la duración y el efecto. El tamaño de cada burbuja es proporcional al peso del estudio (inverso de la varianza).
 
-```{r bubble_plots, echo=FALSE, fig.height=3, fig.width=6}
+```{r bubble_plots, echo=FALSE, fig.height=6, fig.width=6}
 #burbujas etiquetadas por nombre
 bubble(mr.weeks,
        xlab = "Semanas de Contacto",
@@ -254,7 +254,7 @@ bubble(mr.weeks,
 
 **Conclusión:** Los estudios cortos tienden a reportar efectos grandes, mientras que los estudios largos reportan efectos nulos. Esto indica que el efecto de las expectativas inducidas es pasajero.
 
-## 6 Evaluación de Sesgos de Publicación
+# 6 Evaluación de Sesgos de Publicación
 
 El sesgo de publicación es un tipo de sesgo que aparece cuando los estudios que muestran resultados positivos, significativos o “interesantes” tienen más probabilidad de ser publicados que los estudios que encuentran resultados nulos, pequeños o no significativos.
 
@@ -282,70 +282,66 @@ abline(egger_model, lwd = 2, col = "red")
 
 ```
 
-El funnel plot muestra una asimetría clara: los estudios pequeños tienden a reportar efectos más positivos, mientras que faltan estudios pequeños con efectos negativos, lo que sugiere posible sesgo de publicación.
+El funnel plot muestra una asimetría clara: los estudios pequeños tienden a tener efectos más positivos, mientras que faltan estudios pequeños con efectos negativos, lo que sugiere posible sesgo de publicación.
 
-El radial plot refuerza esta evidencia: la pendiente positiva indica que los estudios menos precisos exhiben efectos más grandes, mientras que los más precisos muestran efectos modestos. La dispersión irregular también apunta a heterogeneidad no explicada.
+El gráfico radial muestra la asimetría detectada. A diferencia de un escenario libre de sesgo, donde los estudios deberían dispersarse aleatoriamente alrededor de una línea que parte del origen, observamos un patrón sistemático.
 
-La línea del test de Egger presenta una pendiente negativa marcada, lo que implica que los estudios con mayor error estándar reportan efectos inflados. Este patrón es típico de small-study effects y respalda la conclusión de que el metaanálisis presenta asimetría y que el efecto global podría estar sobreestimado por la influencia de estudios pequeños.
+La línea de regresión roja muestra una pendiente negativa que denota una relación inversa entre la precisión y el tamaño del efecto, donde los estudios menos precisos (izquierda) presentan valores $z$ desproporcionadamente altos que disminuyen conforme aumenta la precisión. Podemos ver que esta línea no arranca del origen (0,0), sino que tiene un inicio positivo marcado (> 1.6), representando el sesgo de publicación en la prueba de Egger. La pendiente negativa y un inicio elevado confirma la presencia de "efectos de estudios pequeños" (small-study effects), indicando una tendencia donde investigaciones de menor tamaño inflan la magnitud global,lo que justifica el uso de métodos correctivos como el *Trim-and-Fill*. 
 
 ## 6.2. Pruebas Formales de Asimetría (Metabias)
 
 Se aplicaron las variantes robustas de las pruebas de asimetría disponibles en la librería `meta`. Es decir que fueron realizadas la prueba de correlación de rangos, la prueba de regresión lineal y la prueba con estimador MM.
 
-Los tres métodos de detección de asimetría del funnel plot muestran un patrón consistente: hay señales de posible sesgo de publicación, aunque el grado de evidencia varía según el test.
+Los tres métodos de detección de asimetría del funnel plot muestran un un patrón: hay señales de posible sesgo de publicación, aunque el grado de evidencia varía según el test.
 
-**Test de Begg (rank correlation):**\
-El test de Begg arroja un resultado marginal (z = 1.79, p = 0.074).\
-Esto sugiere una indicación débil de asimetría, pero no alcanza significación convencional (p \< .05).\
-Dado que el test de Begg tiene baja potencia con k reducido (como aquí, con 19 estudios), un p cercano a 0.05 puede interpretarse como una señal pero no como evidencia concluyente.
+**Test de Begg (rank correlation):**
+El test de Begg da un resultado marginal (z = 1.79, p = 0.074).
+Esto sugiere una indicación débil de asimetría, pero no alcanza(p< .05).
+Pero el test de Begg tiene baja potencia con k bajo (ejemplo 19 estudios), un p cercano a 0.05 puede interpretarse como una señal pero no como evidencia concluyente.
 
-**Egger clásico (método = "linreg"):**\
-El test de Egger estándar produce un resultado casi significativo (t = 2.04, p = 0.057), de nuevo en el límite.\
-Esto indica una tendencia hacia la asimetría, coherente con lo observado visualmente en el funnel plot, pero que aún no supera el umbral clásico de significación.\
-Con muestras pequeñas, Egger también tiende a ser inestable y sensible a heterogeneidad alta.
+**Egger clásico (método = "linreg"):**
+El test de Egger estándar produce un resultado casi significativo (t = 2.04, p = 0.057), de nuevo en el límite.
+MOstrando una tendencia a la asimetría, coherente con lo visto en el funnel plot, pero que aún no es concluyente.
+Con muestras pequeñas, Egger también tiende a ser inestable y sensible a heterogeneidad alta. 
 
 **Egger modificado (método = "mm", Thompson & Sharp, REML):**\
-Este test, más robusto cuando existe heterogeneidad, sí resulta estadísticamente significativo (t = 2.53, p = 0.0218).\
-Dado que este método ajusta la heterogeneidad de manera más apropiada mediante un modelo mixto con tau² aditiva, se considera un método más confiable bajo condiciones como las de nuestro metaanálisis.\
-La significación aquí sugiere asimetría real del funnel plot y, por ende, evidencia más sólida de sesgo de publicación.
+Este test es el más robusto cuando existe heterogeneidad, este si resulta estadísticamente significativo (t = 2.53, p = 0.0218).
+Dado que este método ajusta la heterogeneidad de manera más apropiada, se considera un método más confiable bajo condiciones de nuestro metaanálisis.
+La significación en este reporta asimetría del funnel plot, evidenciando de manera más sólida el sesgo de publicación.
 
 ## 6.4. Método Trim-and-Fill (Recortar y Rellenar)
 
-Para corregir el impacto del sesgo de publicación, se utilizó el método *Trim-and-Fill*. Este algoritmo imputa los estudios teóricamente "faltantes" para restaurar la simetría del *Funnel Plot* y recalcula el efecto global ajustado.
+Para corregir el impacto del sesgo de publicación, se usó el método *Trim-and-Fill*. Este imputa los estudios teóricamente faltantes para restaurar la simetría del Funnel Plot y recalcula el efecto global ajustado.
 
 ```{r trim_fill, echo=FALSE}
-# Aplicación del algoritmo
+# aplicación del algoritmo
 tf <- trimfill(m.gen)
 
-# Visualización del Funnel Plot con estudios imputados (puntos rellenos)
+#visualización del funnel plot con estudios imputados
 funnel(tf, main = "Trim and fill – Raudenbush 1985")
 ```
 
-El método trim-and-fill detecta asimetría en el funnel plot y estima que faltan tres estudios con efectos negativos. Al imputarlos, el efecto combinado cae a 0.028 (IC95%: –0.117 a 0.173; p = 0.70), totalmente compatible con cero. Esto indica que el efecto positivo observado inicialmente dependía en parte de estudios pequeños con efectos grandes, en línea con la evidencia previa de Begg, Egger y el radial plot.
+El método trim-and-fill detecta asimetría en el funnel plot y estima que **faltan tres estudios con efectos negativos**. Al imputarlos, el efecto combinado cae a 0.028 (IC 95%: (-0.117 a 0.173); p = 0.70). Esto indica que el efecto positivo observado inicialmente dependía en parte de estudios pequeños con efectos grandes.
 
-Pese al ajuste, la heterogeneidad sigue siendo moderada-alta (I² = 64%) y el intervalo de predicción amplio (–0.57 a 0.63) muestra que los efectos futuros podrían ser tanto negativos como positivos. En conjunto, tras corregir la asimetría, no queda evidencia de un efecto promedio consistente.
+Pero a pesar del ajuste la heterogeneidad sigue siendo moderada-alta (I² = 64%) y el intervalo de predicción amplio (-0.57 a 0.63) muestra que los efectos futuros podrían ser negativos como positivos. Entonces luego de corregir la asimetría, no queda evidencia de un efecto promedio consistente.
 
-## 7. Estudio de Tamaño de Muestra y Potencia
+# 7. Estudio de Tamaño de Muestra y Potencia
 
-En este análisis de potencia se evaluó la capacidad del metaanálisis para detectar efectos del tamaño esperado bajo distintos supuestos. Se trabajó con un total previsto de 19 estudios, cada uno con un tamaño muestral esperado de 102 participantes, y se consideraron dos valores esperados del efecto, d = 0.1 y d = 0.2. Además, se examinó cómo varía la potencia bajo un modelo de efectos fijos y un modelo de efectos aleatorios con I² = 50%.
+En este análisis de potencia se evaluó la capacidad del metaanálisis para detectar efectos del tamaño esperado bajo distintos supuestos. Se trabajó con un total de 19 estudios, cada uno con un tamaño muestral esperado de 102 participantes, y se consideraron dos valores esperados del efecto, d = 0.1 y d = 0.2. Además se revisó cómo varía la potencia bajo un modelo de efectos fijos y un modelo de efectos aleatorios con I² = 50%.
 
-El análisis revela que, para un d = 0.1, la potencia \~60% y en efectos aleatorios \~36%. Esto implica que un efecto tan débil podría pasar inadvertido, especialmente en presencia de heterogeneidad entre estudios. En contraste, para d = 0.2, la potencia se vuelve muy alta en el modelo de efectos fijos \~99% y sólida en el modelo de efectos aleatorios \~87%. En conjunto, estos resultados indican que, con la evidencia disponible, el metaanálisis tiene buena capacidad para detectar efectos moderados, pero no está bien equipado para identificar efectos muy pequeños.
+El análisis revela que, para un d = 0.1, la potencia 60% y en efectos aleatorios 36%. Esto implica que un efecto tan débil podría pasar inadvertido, especialmente en presencia de heterogeneidad entre estudios. Pero para d = 0.2, la potencia se vuelve muy alta en el modelo de efectos fijos 99% y sólida en el modelo de efectos aleatorios 87%.Estos dos resultados indican que con la evidencia disponible el metaanálisis tiene buena capacidad para detectar efectos moderados, pero no está bien preparado para identificar efectos muy chicos.  
 
-# 8. Discusión y Alcance de los Resultados
+# 8. Discusión y Conclusiones
 
-El metaanálisis de 19 estudios muestra que el efecto Pigmalión, medido sobre desempeño cognitivo, es pequeño, inconsistente y altamente dependiente del contexto. El efecto promedio no es significativo y presenta heterogeneidad moderada, evidenciada tanto en los tests de heterogeneidad como en los análisis gráficos e influenciales. Aunque algunos estudios individuales influyen fuertemente en el tamaño del efecto, incluso al removerlos el resultado global se mantiene cercano a cero.
+# 8. Discusión y Conclusiones
 
-Los análisis de moderadores indican que el entorno individual muestra efectos mayores que el grupal, aunque con pocos estudios. El moderador más importante es la duración del experimento, que explica una proporción sustancial de la variabilidad: los estudios breves reportan efectos más altos, mientras que los de mayor duración no muestran impacto. Además, existe evidencia consistente de sesgo de publicación, ya que los estudios pequeños tienden a inflar el efecto y los métodos de corrección reducen el tamaño del efecto a valores prácticamente nulos.
+El metaanálisis demuestra que el efecto Pigmalión sobre el Coeficiente Intelectual es pequeño, inconsistente y tiene una gran dependencia del contexto. Los resultados indican que el efecto promedio no es estadísticamente significativo y que existe una heterogeneidad moderada, la cual comprobamos con pruebas estadísticas y con análisis gráficos. Si bien se detectó que algunos estudios individuales influyen fuertemente en el tamaño del efecto, el análisis de sensibilidad confirmó que cuando sacamos a estos valores atípicos, el resultado global se mantiene cercano a cero, lo que hace cuestionar la robustez del fenómeno.
 
-En conjunto, los resultados sugieren que el efecto Pigmalión no es un fenómeno robusto, sino uno que aparece en condiciones específicas, tiende a ser efímero y está afectado por sesgos de la literatura.
+Al profundizar en las causas de esta variabilidad, los análisis de moderadores dan resultados reveladores. Por un lado, el entorno de instrucción parece tener un rol, debido a que la enseñanza individual muestra efectos más grandes que la grupal, aunque la evidencia es limitada por los pocos estudios en esa categoría. Por otro lado, el moderador más importante resultó ser el tiempo de contacto previo (weeks), siendo la variable que explica una proporción importante de la heterogeneidad. Los datos muestran una relación inversa: cuando las expectativas se imponen al inicio del curso (con poco contacto previo), los efectos son mayores, pero si el profesor ya conoce a los alumnos desde hace semanas, la inducción de expectativas no tiene impacto. Esto sugiere conocer al alumno antes anula el efecto. Tambien se le suma la evidencia consistente de sesgo de publicación detectada en los gráficos de embudo y el test de Egger.
 
-## 9. Conclusiones y Futuros Pasos
+En conclusión, los resultados sugieren que el efecto Pigmalión no es un fenómeno robusto para modificar el Coeficiente Intelectual de forma generalizada, pero si que puede aparecer bajo condiciones específicas, principalmente cuando el docente no tiene información previa del alumno. Por lo tanto, se recomienda que futuras investigaciones abandonen el uso del Coeficiente Intelectual global como variable dependiente, debido que es una medida estable, y traten de enfocarse en variables mas cambiantes como el rendimiento académico. Tambien, es importante que los nuevos estudios controlen el momento de la inducción y se realice una preregistración  para reducir el sesgo de publicación.
 
-En base al análisis estadístico realizado, se concluye que el efecto global es pequeño, no significativo y sensible al contexto, la duración del experimento es el moderador más claro: efectos iniciales desaparecen con el tiempo., las intervenciones individuales muestran mayor efecto que las grupales, aunque con evidencia limitada, hay sesgo de publicación que amplifica artificialmente el efecto en estudios pequeños y que la heterogeneidad es moderada y solo parcialmente explicada por los moderadores analizados.
-
-Se recomienda que futuras investigaciones abandonen el uso del CI global como variable dependiente, ya que es una medida estable y difícil de modificar, y se enfoquen en variables más sensibles como el rendimiento académico específico, la autoeficacia o la motivación del estudiante, controlando rigurosamente el tiempo de exposición. Realizar estudios contemporáneos y preregistrados para reducir sesgo de publicación y explorar directamente cómo las expectativas modifican el comportamiento docente.
-
-## 10. Referencias Bibliográficas
+# Referencias Bibliográficas
 
 -   Harrer, M., Cuijpers, P., Furukawa, T.A., & Ebert, D.D. (2021). *Doing Meta-Analysis with R: A Hands-On Guide*. Chapman & Hall/CRC Press.
 -   Raudenbush, S. W. (1984). Magnitude of teacher expectancy effects on pupil IQ as a function of the credibility of expectancy induction: A synthesis of findings from 18 experiments. *Journal of Educational Psychology*, 76(1), 85–97.
@@ -366,7 +362,7 @@ print(citation("metapower"), bibtex=FALSE)
 
 # Apéndice: Sentencias de R Utilizadas
 
-Para garantizar la reproducibilidad de este estudio, se adjunta la totalidad del código utilizado, el cual se ha presentado y ejecutado a lo largo de las secciones previas de este documento dinámico.
+Se adjuntan todos los códigos utilizados:
 
 ```{r}
 library(meta)
