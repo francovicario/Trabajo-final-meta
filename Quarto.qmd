@@ -24,7 +24,7 @@ Este descubrimiento generó una controversia grande en la psicología educativa 
 
 El problema que afrontar este trabajo final es la necesidad de sintetizar esta evidencia dispersa. Dado que los estudios individuales presentan resultados contradictorios, el metaanálisis es la herramienta correcta para esto.
 
-Trabajamos con el dataset dat.raudenbush1985 de la libreria metadat. El dataset esta conformado por 19 estudios y 10 columnas.
+Trabajamos con el dataset dat.raudenbush1985 de la libreria metadat. Este dataset reúne información de 19 estudios que analizan el efecto de las expectativas de los docentes sobre el coeficiente intelectual de los alumnos. Cada fila corresponde a un estudio e incluye variables descriptivas y metodológicas, como el autor y año de publicación, las semanas de contacto previo a la inducción de expectativas, el contexto de administración de las pruebas, grupal o individual, y si el evaluador estaba ciego o informado sobre la condición experimental. Además, el dataset reporta los tamaños muestrales de los grupos experimental y de control, junto con el tamaño del efecto estandarizado que resume la diferencia media entre grupos y su varianza muestral, lo que permite realizar análisis de metaanálisis y explorar fuentes de heterogeneidad entre estudios.
 
 # 2. Metodología Usada
 
